@@ -4,7 +4,7 @@ stages:
 variables:
   IMAGE_TAG: "docker.io/ilmannafian/fenn"
 
-fe nightly:
+.docker_template: &docker_template
   stage: deploy
   image: docker:20
   variables:
@@ -14,6 +14,37 @@ fe nightly:
     - docker:20-dind
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u $CI_REGISTRY_USER --password-stdin
+
+fe nightly:
+  <<: *docker_template
   script:
     - docker build -t $IMAGE_TAG:fenightly ./fenn-fe
     - docker push $IMAGE_TAG:fenightly
+  except:
+    - master
+
+fe latest:
+  <<: *docker_template
+  script:
+    - docker build -t $IMAGE_TAG:fe -t $IMAGE_TAG:fe$CI_COMMIT_TAG ./fenn-fe
+    - docker push $IMAGE_TAG:fe
+    - docker push $IMAGE_TAG:fe$CI_COMMIT_TAG
+  only:
+    - tags
+
+be nightly:
+  <<: *docker_template
+  script:
+    - docker build -t $IMAGE_TAG:benightly ./fenn-be
+    - docker push $IMAGE_TAG:benightly
+  except:
+    - master
+
+be latest:
+  <<: *docker_template
+  script:
+    - docker build -t $IMAGE_TAG:be -t $IMAGE_TAG:be$CI_COMMIT_TAG ./fenn-be
+    - docker push $IMAGE_TAG:be
+    - docker push $IMAGE_TAG:be$CI_COMMIT_TAG
+  only:
+    - tags
