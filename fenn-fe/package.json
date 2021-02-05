@@ -26,6 +26,6 @@
     }
   },
   "lint-staged": {
-    "**/*.{ts,vue,html,css}": "prettier --write --ignore-unknown"
+    "**/*.{ts,tsx,html,css}": "prettier --write --ignore-unknown"
   }
 }
