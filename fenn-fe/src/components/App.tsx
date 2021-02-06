@@ -1,9 +1,9 @@
 import { Box, Container, createStyles, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 
+import NavBar from './navs/NavBar';
+import NavDrawer from './navs/NavDrawer';
 import Home from './Home';
-import NavBar from './NavBar';
-import NavDrawer from './NavDrawer';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
