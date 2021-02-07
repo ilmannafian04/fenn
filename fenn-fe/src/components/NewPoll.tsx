@@ -27,6 +27,12 @@ const NewPoll = () => {
       ]);
     }
   };
+  const removeOption = (index: number) => {
+    formik.setFieldValue('options', [
+      ...formik.values.options.slice(0, index),
+      ...formik.values.options.slice(index + 1),
+    ]);
+  };
   return (
     <>
       <h1>Create new poll</h1>
@@ -56,7 +62,7 @@ const NewPoll = () => {
                       index < formik.values.options.length - 1 &&
                       formik.values.options[index - 1].length > 0 ? (
                         <InputAdornment position="end">
-                          <IconButton>
+                          <IconButton onClick={() => removeOption(index)} value={`${index}`}>
                             <RemoveIcon />
                           </IconButton>
                         </InputAdornment>
