@@ -1,7 +1,7 @@
 import { Box, Button, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import { useFormik } from 'formik';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 interface IPollFormValues {
   title: string;
@@ -18,6 +18,15 @@ const NewPoll = () => {
       console.log(values);
     },
   });
+  const optionChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 0) {
+      formik.setFieldValue('options', [
+        ...formik.values.options.slice(0, formik.values.options.length - 1),
+        e.target.value,
+        '',
+      ]);
+    }
+  };
   return (
     <>
       <h1>Create new poll</h1>
@@ -40,19 +49,7 @@ const NewPoll = () => {
                   variant="outlined"
                   value={option}
                   name={`options[${index}]`}
-                  onChange={
-                    index === formik.values.options.length - 1
-                      ? (e) => {
-                          if (e.target.value.length > 0) {
-                            formik.setFieldValue('options', [
-                              ...formik.values.options.slice(0, formik.values.options.length - 1),
-                              e.target.value,
-                              '',
-                            ]);
-                          }
-                        }
-                      : formik.handleChange
-                  }
+                  onChange={index === formik.values.options.length - 1 ? optionChangeHandler : formik.handleChange}
                   InputProps={{
                     endAdornment:
                       index > 1 &&
