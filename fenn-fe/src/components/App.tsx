@@ -2,7 +2,7 @@ import { Box, Container, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
 
 import NavBar from './NavBar';
-import Home from './Home';
+import NewPoll from './NewPoll';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -17,7 +17,7 @@ const App = () => {
       <NavBar />
       <Container>
         <div className={classes.toolbar} />
-        <Home />
+        <NewPoll />
       </Container>
     </Box>
   );
