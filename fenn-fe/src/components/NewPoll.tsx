@@ -2,6 +2,7 @@ import { Box, Button, IconButton, InputAdornment, Paper, TextField } from '@mate
 import RemoveIcon from '@material-ui/icons/Remove';
 import { FormikErrors, useFormik } from 'formik';
 import React, { ChangeEvent } from 'react';
+import axios from 'axios';
 
 interface IPollFormValues {
   title: string;
@@ -19,7 +20,7 @@ const validateForm = (values: IPollFormValues): FormikErrors<IPollFormValues> =>
       optionErrors.push('');
     }
   });
-  if (optionErrors.reduce((prev, error) => prev || error.length > 0, true)) errors.options = optionErrors;
+  if (optionErrors.reduce((prev, error) => prev || error.length > 0, false)) errors.options = optionErrors;
   return errors;
 };
 
@@ -30,7 +31,16 @@ const NewPoll = () => {
       options: ['', '', ''],
     },
     onSubmit: (values) => {
-      console.log(values);
+      const sanitized: IPollFormValues = {
+        ...values,
+        options: [...values.options.slice(0, values.options.length - 1)],
+      };
+      axios
+        .post('/api/poll', sanitized)
+        .then((value) => {
+          console.log(value);
+        })
+        .catch((err) => console.error(err));
     },
     validateOnChange: false,
     validateOnBlur: false,
