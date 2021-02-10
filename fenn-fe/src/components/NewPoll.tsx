@@ -19,7 +19,7 @@ const validateForm = (values: IPollFormValues): FormikErrors<IPollFormValues> =>
       optionErrors.push('');
     }
   });
-  errors.options = optionErrors;
+  if (optionErrors.reduce((prev, error) => prev || error.length > 0, true)) errors.options = optionErrors;
   return errors;
 };
 
