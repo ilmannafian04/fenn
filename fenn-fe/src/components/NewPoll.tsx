@@ -1,12 +1,27 @@
 import { Box, Button, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { useFormik } from 'formik';
+import { FormikErrors, useFormik } from 'formik';
 import React, { ChangeEvent } from 'react';
 
 interface IPollFormValues {
   title: string;
   options: string[];
 }
+
+const validateForm = (values: IPollFormValues): FormikErrors<IPollFormValues> => {
+  const errors: FormikErrors<IPollFormValues> = {};
+  if (values.title.length === 0) errors.title = "Poll title can't be empty";
+  const optionErrors = [];
+  values.options.forEach((option, index) => {
+    if (index < values.options.length - 1 && option.length === 0) {
+      optionErrors.push('Poll option cannot be empty');
+    } else {
+      optionErrors.push('');
+    }
+  });
+  errors.options = optionErrors;
+  return errors;
+};
 
 const NewPoll = () => {
   const formik = useFormik<IPollFormValues>({
@@ -17,6 +32,9 @@ const NewPoll = () => {
     onSubmit: (values) => {
       console.log(values);
     },
+    validateOnChange: false,
+    validateOnBlur: false,
+    validate: validateForm,
   });
   const optionChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > 0) {
