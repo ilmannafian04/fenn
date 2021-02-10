@@ -12,3 +12,4 @@ dotenv = "0.15.0"
 log = "0.4.14"
 env_logger = "0.8.2"
 diesel = { version = "1.4.5", features = ["postgres", "r2d2"]}
+chrono = { version = "0.4.19", default-features = false, features = ["clock", "serde", "std"] }
