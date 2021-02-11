@@ -1,7 +1,12 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct NewPollParam {
-    title: String,
-    options: Vec<String>,
+    pub title: String,
+    pub options: Vec<String>,
+}
+
+#[derive(Serialize)]
+pub struct IDResponse {
+    pub id: i32,
 }
