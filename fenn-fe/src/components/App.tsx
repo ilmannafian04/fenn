@@ -1,8 +1,9 @@
 import { Box, Container, createStyles, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import NavBar from './NavBar';
-import NewPoll from './NewPoll';
+import routes from './routes';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -17,7 +18,13 @@ const App = () => {
       <NavBar />
       <Container>
         <div className={classes.toolbar} />
-        <NewPoll />
+        <Switch>
+          {routes.map((value, index) => (
+            <Route path={value.path} key={index}>
+              {value.el}
+            </Route>
+          ))}
+        </Switch>
       </Container>
     </Box>
   );
