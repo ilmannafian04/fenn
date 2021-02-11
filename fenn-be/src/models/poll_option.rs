@@ -1,4 +1,4 @@
-use diesel::{PgConnection, QueryResult, RunQueryDsl, insert_into};
+use diesel::{insert_into, PgConnection, QueryResult, RunQueryDsl};
 
 use crate::models::poll::Poll;
 use crate::schema::poll_options;
@@ -19,7 +19,12 @@ pub struct NewPollOption {
 }
 
 impl PollOption {
-    pub fn insert_many(conn: &PgConnection, options: &Vec<NewPollOption>) -> QueryResult<Vec<PollOption>> {
-        insert_into(poll_options::table).values(options).get_results(conn)
-    } 
+    pub fn insert_many(
+        conn: &PgConnection,
+        options: &Vec<NewPollOption>,
+    ) -> QueryResult<Vec<PollOption>> {
+        insert_into(poll_options::table)
+            .values(options)
+            .get_results(conn)
+    }
 }

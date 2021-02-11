@@ -1,13 +1,13 @@
 use chrono::NaiveDateTime;
-use diesel::{PgConnection, prelude::*, QueryResult, Queryable, RunQueryDsl, insert_into};
+use diesel::{insert_into, PgConnection, QueryResult, Queryable, RunQueryDsl};
 
-use crate::schema::polls::{self, dsl::polls as all_polls};
+use crate::schema::polls;
 
 #[derive(Debug, Queryable)]
 pub struct Poll {
     pub id: i32,
     title: String,
-    created_at: NaiveDateTime
+    created_at: NaiveDateTime,
 }
 
 #[derive(Insertable)]
