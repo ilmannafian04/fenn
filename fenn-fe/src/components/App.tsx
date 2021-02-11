@@ -20,7 +20,7 @@ const App = () => {
         <div className={classes.toolbar} />
         <Switch>
           {routes.map((value, index) => (
-            <Route path={value.path} key={index}>
+            <Route path={value.path} key={index} exact={value.exact}>
               {value.el}
             </Route>
           ))}
