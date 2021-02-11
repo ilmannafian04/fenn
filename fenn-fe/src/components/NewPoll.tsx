@@ -12,7 +12,7 @@ interface IPollFormValues {
 const validateForm = (values: IPollFormValues): FormikErrors<IPollFormValues> => {
   const errors: FormikErrors<IPollFormValues> = {};
   if (values.title.length === 0) errors.title = "Poll title can't be empty";
-  const optionErrors = [];
+  const optionErrors: string[] = [];
   values.options.forEach((option, index) => {
     if (option.length === 0 && (index < values.options.length - 1 || values.options.length < 3)) {
       optionErrors.push('Poll option cannot be empty');
@@ -67,7 +67,7 @@ const NewPoll = () => {
                 value={fmk.values.title}
                 onChange={fmk.handleChange}
                 margin="normal"
-                error={fmk.errors.title?.length > 0}
+                error={fmk.errors.title !== undefined && fmk.errors.title.length > 0}
                 helperText={fmk.errors.title}
               />
               {fmk.values.options.map((option, index) => (
@@ -79,7 +79,7 @@ const NewPoll = () => {
                   value={option}
                   name={`options[${index}]`}
                   onChange={index === fmk.values.options.length - 1 ? optionChangeHandler : fmk.handleChange}
-                  error={fmk.errors.options?.[index]?.length > 0}
+                  error={fmk.errors.options !== undefined && fmk.errors.options[index].length > 0}
                   helperText={fmk.errors.options?.[index]}
                   InputProps={{
                     endAdornment:
