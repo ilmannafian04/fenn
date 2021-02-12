@@ -1,14 +1,15 @@
-use diesel::{insert_into, PgConnection, QueryResult, RunQueryDsl};
+use diesel::{insert_into, BelongingToDsl, PgConnection, QueryResult, RunQueryDsl};
+use serde::Serialize;
 
 use crate::models::poll::Poll;
 use crate::schema::poll_options;
 
-#[derive(Associations, Debug, Queryable)]
+#[derive(Associations, Debug, Identifiable, Queryable, Serialize)]
 #[belongs_to(Poll)]
 pub struct PollOption {
-    id: i32,
-    poll_id: i32,
-    name: String,
+    pub id: i32,
+    pub poll_id: i32,
+    pub name: String,
 }
 
 #[derive(Insertable)]
@@ -26,5 +27,9 @@ impl PollOption {
         insert_into(poll_options::table)
             .values(options)
             .get_results(conn)
+    }
+
+    pub fn get_many_by_poll(conn: &PgConnection, poll: &Poll) -> QueryResult<Vec<PollOption>> {
+        PollOption::belonging_to(poll).get_results::<PollOption>(conn)
     }
 }

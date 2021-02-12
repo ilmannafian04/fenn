@@ -6,6 +6,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api")
             .route("/ping", web::get().to(c::ping))
-            .route("/poll", web::post().to(c::new_poll)),
+            .route("/poll", web::post().to(c::new_poll))
+            .route("/poll", web::get().to(c::get_poll)),
     );
 }

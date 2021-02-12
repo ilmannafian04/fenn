@@ -3,15 +3,14 @@ use diesel::{
     r2d2::{ConnectionManager, Pool},
     PgConnection,
 };
-use log::debug;
 
-use crate::models::poll::NewPoll;
-use crate::{
-    dto::{IDResponse, NewPollParam},
-    models::{
-        poll::Poll,
-        poll_option::{NewPollOption, PollOption},
-    },
+use crate::dto::{
+    common::IDStruct,
+    poll::{NewPollParam, PollResponse},
+};
+use crate::models::{
+    poll::{NewPoll, Poll},
+    poll_option::{NewPollOption, PollOption},
 };
 
 type DbPool = Pool<ConnectionManager<PgConnection>>;
@@ -21,7 +20,6 @@ pub async fn ping() -> impl Responder {
 }
 
 pub async fn new_poll(param: web::Json<NewPollParam>, pool: web::Data<DbPool>) -> impl Responder {
-    debug!("{:?}", param);
     let new_poll = NewPoll {
         title: param.title.clone(),
     };
@@ -47,10 +45,40 @@ pub async fn new_poll(param: web::Json<NewPollParam>, pool: web::Data<DbPool>) -
             let option_query =
                 web::block(move || PollOption::insert_many(&conn, &new_poll_options)).await;
             match option_query {
-                Ok(_) => HttpResponse::Ok().json(IDResponse { id: poll.id }),
+                Ok(_) => HttpResponse::Ok().json(IDStruct { id: poll.id }),
                 Err(e) => HttpResponse::InternalServerError().body(format!("{}", e)),
             }
         }
         Err(e) => HttpResponse::InternalServerError().body(format!("{}", e)),
     }
+}
+
+pub async fn get_poll(
+    web::Query(param): web::Query<IDStruct>,
+    pool: web::Data<DbPool>,
+) -> impl Responder {
+    let poll = match pool.get() {
+        Ok(conn) => {
+            let poll_query = web::block(move || Poll::get_by_id(&conn, param.id)).await;
+            match poll_query {
+                Ok(poll) => poll,
+                Err(_) => return HttpResponse::NotFound().finish(),
+            }
+        }
+        Err(_) => return HttpResponse::InternalServerError().body("can't get DB pool"),
+    };
+    let temp_poll = poll.clone();
+    let options = match pool.get() {
+        Ok(conn) => {
+            let option_query =
+                web::block(move || PollOption::get_many_by_poll(&conn, &temp_poll)).await;
+            match option_query {
+                Ok(options) => options,
+                Err(_) => return HttpResponse::NotFound().finish(),
+            }
+        }
+        Err(_) => return HttpResponse::InternalServerError().body("can't get DB pool"),
+    };
+    let ctx = PollResponse::new(poll, options);
+    HttpResponse::Ok().json(ctx)
 }

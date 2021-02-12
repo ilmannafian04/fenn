@@ -1,13 +1,14 @@
 use chrono::NaiveDateTime;
-use diesel::{insert_into, PgConnection, QueryResult, Queryable, RunQueryDsl};
+use diesel::{insert_into, prelude::*, PgConnection, QueryResult, Queryable, RunQueryDsl};
+use serde::Serialize;
 
-use crate::schema::polls;
+use crate::schema::polls::{self, dsl::polls as all_polls, dsl::*};
 
-#[derive(Debug, Queryable)]
+#[derive(Clone, Debug, Identifiable, Queryable, Serialize)]
 pub struct Poll {
     pub id: i32,
-    title: String,
-    created_at: NaiveDateTime,
+    pub title: String,
+    pub created_at: NaiveDateTime,
 }
 
 #[derive(Insertable)]
@@ -19,5 +20,9 @@ pub struct NewPoll {
 impl Poll {
     pub fn insert_poll(conn: &PgConnection, new_poll: &NewPoll) -> QueryResult<Poll> {
         insert_into(polls::table).values(new_poll).get_result(conn)
+    }
+
+    pub fn get_by_id(conn: &PgConnection, poll_id: i32) -> QueryResult<Poll> {
+        all_polls.filter(id.eq(poll_id)).first::<Poll>(conn)
     }
 }
