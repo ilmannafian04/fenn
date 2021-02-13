@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Build and push
-        if: github.ref == refs/heads/dev
+        if: github.ref == 'refs/heads/dev'
         uses: docker/build-push-action@v2
         with:
           context: ./fenn-${{ matrix.app }}
@@ -34,11 +34,11 @@ jobs:
           ref="${github_ref/refs\/tags\/v/}"
           echo $ref
           echo "::set-env name=ref::$ref"
-        if: github.ref == refs/heads/v*.*.*
+        if: github.ref == 'refs/heads/v*.*.*'
         env:
           github_ref: ${{ github.ref }}
       - name: Build and push
-        if: github.ref == refs/heads/v*.*.*
+        if: github.ref == 'refs/heads/v*.*.*'
         uses: docker/build-push-action@v2
         with:
           context: ./fenn-${{ matrix.app }}
