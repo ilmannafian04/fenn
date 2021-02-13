@@ -4,8 +4,11 @@ on: push
 
 jobs:
   be:
-    name: Publish back-end image
+    name: Publish image
     runs-on: Ubuntu-20.04
+    strategy:
+      matrix:
+        app: [fe, be]
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -19,12 +22,30 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Build and push
+        if: ${{ github.ref == refs/heads/dev }}
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: ./fenn-be
+          context: ./fenn-${{ matrix.app }}
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ilmannafian/fenn:benightly
+          tags: ilmannafian/fenn:${{ matrix.app }}nightly
+      - name: Add tag to env var with leading v removed
+        run: |
+          ref="${github_ref/refs\/tags\/v/}"
+          echo $ref
+          echo "::set-env name=ref::$ref"
+        if: ${{ github.ref == refs/heads/v*.*.* }}
+        env:
+          github_ref: ${{ github.ref }}
+      - name: Build and push
+        if: ${{ github.ref == refs/heads/v*.*.* }}
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./fenn-${{ matrix.app }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ilmannafian/fenn:${{ matrix.app }}$ref
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
