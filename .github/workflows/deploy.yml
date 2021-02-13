@@ -23,7 +23,6 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       - name: Build and push
         if: github.ref == refs/heads/dev
-        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ./fenn-${{ matrix.app }}
@@ -40,12 +39,9 @@ jobs:
           github_ref: ${{ github.ref }}
       - name: Build and push
         if: github.ref == refs/heads/v*.*.*
-        id: docker_build
         uses: docker/build-push-action@v2
         with:
           context: ./fenn-${{ matrix.app }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ilmannafian/fenn:${{ matrix.app }}$ref
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
