@@ -1,8 +1,9 @@
 import { Box, Button, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
+import axios from 'axios';
 import { FormikErrors, useFormik } from 'formik';
 import React, { ChangeEvent } from 'react';
-import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 interface IPollFormValues {
   title: string;
@@ -25,6 +26,7 @@ const validateForm = (values: IPollFormValues): FormikErrors<IPollFormValues> =>
 };
 
 const NewPoll = () => {
+  const history = useHistory();
   const fmk = useFormik<IPollFormValues>({
     initialValues: {
       title: '',
@@ -36,9 +38,9 @@ const NewPoll = () => {
         options: [...values.options.slice(0, values.options.length - 1)],
       };
       axios
-        .post('/api/poll', sanitized)
+        .post<{ id: number }>('/api/poll', sanitized)
         .then((value) => {
-          console.log(value);
+          history.push(`/${value.data.id}`);
         })
         .catch((err) => console.error(err));
     },
