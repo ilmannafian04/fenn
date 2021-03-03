@@ -8,7 +8,7 @@ on:
       - v*.*.*
 
 jobs:
-  be:
+  docker-image:
     name: Publish image
     runs-on: Ubuntu-20.04
     strategy:
@@ -26,7 +26,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: Build and push
+      - name: Build and push nightly
         if: github.ref == 'refs/heads/dev'
         uses: docker/build-push-action@v2
         with:
@@ -42,7 +42,7 @@ jobs:
         if: github.ref == 'refs/heads/v*.*.*'
         env:
           github_ref: ${{ github.ref }}
-      - name: Build and push
+      - name: Build and push tags
         if: github.ref == 'refs/heads/v*.*.*'
         uses: docker/build-push-action@v2
         with:
