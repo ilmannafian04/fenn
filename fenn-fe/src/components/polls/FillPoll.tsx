@@ -12,6 +12,7 @@ const FillPoll = () => {
     axios
       .get<Poll>('/api/poll', { params: { id: pollId } })
       .then((value) => {
+        value.data.createdAt = new Date(`${value.data.createdAt}Z`);
         setPoll(value.data);
       })
       .catch((err) => console.error(err));
