@@ -8,6 +8,7 @@ use crate::schema::polls::{self, dsl::polls as all_polls, dsl::*};
 pub struct Poll {
     pub id: i32,
     pub title: String,
+    pub multi_choice: bool,
     pub created_at: NaiveDateTime,
 }
 
@@ -15,6 +16,7 @@ pub struct Poll {
 #[table_name = "polls"]
 pub struct NewPoll {
     pub title: String,
+    pub multi_choice: bool,
 }
 
 impl Poll {

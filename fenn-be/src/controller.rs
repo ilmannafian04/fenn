@@ -22,6 +22,7 @@ pub async fn ping() -> impl Responder {
 pub async fn new_poll(param: web::Json<NewPollParam>, pool: web::Data<DbPool>) -> impl Responder {
     let new_poll = NewPoll {
         title: param.title.clone(),
+        multi_choice: param.multi_choice,
     };
     let poll = match pool.get() {
         Ok(conn) => {

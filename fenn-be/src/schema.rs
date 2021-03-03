@@ -10,6 +10,7 @@ table! {
     polls (id) {
         id -> Int4,
         title -> Varchar,
+        multi_choice -> Bool,
         created_at -> Timestamp,
     }
 }

@@ -1,4 +1,14 @@
-import { Box, Button, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  FormControlLabel,
+  FormGroup,
+  IconButton,
+  InputAdornment,
+  Paper,
+  TextField,
+  Checkbox,
+} from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import axios from 'axios';
 import { FormikErrors, useFormik } from 'formik';
@@ -7,6 +17,7 @@ import { useHistory } from 'react-router-dom';
 
 interface IPollFormValues {
   title: string;
+  multiChoice: boolean;
   options: string[];
 }
 
@@ -30,6 +41,7 @@ const NewPoll = () => {
   const fmk = useFormik<IPollFormValues>({
     initialValues: {
       title: '',
+      multiChoice: false,
       options: ['', '', ''],
     },
     onSubmit: (values) => {
@@ -95,6 +107,19 @@ const NewPoll = () => {
                   }}
                 />
               ))}
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={fmk.values.multiChoice}
+                      onChange={fmk.handleChange}
+                      name="multiChoice"
+                      color="default"
+                    />
+                  }
+                  label="Allow multiple choices"
+                />
+              </FormGroup>
               <Button type="submit">Submit</Button>
             </Box>
           </form>

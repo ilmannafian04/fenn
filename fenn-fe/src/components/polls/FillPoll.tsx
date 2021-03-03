@@ -16,6 +16,7 @@ const FillPoll = () => {
       })
       .catch((err) => console.error(err));
   }, []);
+  console.log(poll);
   return poll ? (
     <>
       <h1>{poll.title}</h1>
