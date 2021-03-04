@@ -2,8 +2,6 @@ name: Publish Docker image
 
 on:
   push:
-    branches:
-      - dev
     tags:
       - v*.*.*
 
@@ -26,24 +24,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: Build and push nightly
-        if: github.ref == 'refs/heads/dev'
-        uses: docker/build-push-action@v2
-        with:
-          context: ./fenn-${{ matrix.app }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ilmannafian/fenn:${{ matrix.app }}nightly
       - name: Add tag to env var with leading v removed
         run: |
           ref="${github_ref/refs\/tags\/v/}"
           echo $ref
           echo "::set-env name=ref::$ref"
-        if: github.ref == 'refs/heads/v*.*.*'
         env:
           github_ref: ${{ github.ref }}
       - name: Build and push tags
-        if: github.ref == 'refs/heads/v*.*.*'
         uses: docker/build-push-action@v2
         with:
           context: ./fenn-${{ matrix.app }}
