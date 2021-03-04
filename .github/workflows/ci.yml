@@ -14,7 +14,6 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo
             fenn-be/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Setup rust toolchain
@@ -36,9 +35,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo
             fenn-be/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
@@ -53,9 +56,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo
             fenn-be/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
       - name: Run fmt
         uses: actions-rs/cargo@v1
         with:
@@ -70,9 +77,13 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ~/.cargo
             fenn-be/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Setup rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
       - name: Run clippy
         uses: actions-rs/clippy-check@v1
         with:
