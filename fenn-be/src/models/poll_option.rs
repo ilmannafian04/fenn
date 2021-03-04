@@ -22,7 +22,7 @@ pub struct NewPollOption {
 impl PollOption {
     pub fn insert_many(
         conn: &PgConnection,
-        options: &Vec<NewPollOption>,
+        options: &[NewPollOption],
     ) -> QueryResult<Vec<PollOption>> {
         insert_into(poll_options::table)
             .values(options)
