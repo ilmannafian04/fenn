@@ -1,6 +1,6 @@
 # Fenn
 
-[![pipeline status](https://gitlab.com/ilmannafian04/fenn/badges/main/pipeline.svg)](https://gitlab.com/ilmannafian04/fenn/-/commits/main)
+[![deploy workflow](https://github.com/ilmannafian04/fenn/actions/workflows/deploy.yml/badge.svg)](https://github.com/ilmannafian04/fenn/actions/workflows/deploy.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ilmannafian/fenn)](https://hub.docker.com/r/ilmannafian/fenn)
 
 An online poll maker
