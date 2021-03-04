@@ -66,6 +66,7 @@ jobs:
           override: true
           profile: minimal
           toolchain: nightly
+          components: rustfmt
       - name: Run fmt
         uses: actions-rs/cargo@v1
         with:
@@ -88,6 +89,7 @@ jobs:
           override: true
           profile: minimal
           toolchain: nightly
+          components: clippy
       - name: Run clippy
         uses: actions-rs/clippy-check@v1
         with:
