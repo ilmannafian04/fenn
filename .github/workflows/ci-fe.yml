@@ -23,8 +23,7 @@ jobs:
         with:
           path: |
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            fenn-fe/node-modules
-          key: ${{ runner.os }}-yarn-${{ env.GITHUB_REF }}
+          key: ${{ runner.os }}-yarn-${{ github.ref }}
           restore-keys: ${{ runner.os }}-yarn-
       - uses: actions/setup-node@v2
         with:
@@ -44,8 +43,9 @@ jobs:
         with:
           path: |
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            fenn-fe/node-modules
-          key: ${{ runner.os }}-yarn-${{ env.GITHUB_REF }}
+          key: ${{ runner.os }}-yarn-${{ github.ref }}
           restore-keys: ${{ runner.os }}-yarn-
+      - name: Install dependendices
+        run: yarn install --pure-lockfile
       - name: Run prettier
         run: yarn format
